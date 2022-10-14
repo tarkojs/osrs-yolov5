@@ -1,15 +1,14 @@
-import cv2 as cv
 import time
 import misc
 import torch
-import pandas as pd
 import pyautogui as pya
 from time import sleep
 from random import randint, uniform
 from PIL import ImageGrab
 
+# ideas --> clean the code, add automatic log-on, create & train a better model, 
 
-model = torch.hub.load('ultralytics/yolov5', 'custom', '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/yolov5/runs/train/exp13/weights/best.pt') 
+model = torch.hub.load('ultralytics/yolov5', 'custom', '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/weights/best.pt')
 model.conf = 0.7  # NMS confidence threshold
 iou = 0.45  # NMS IoU threshold
 agnostic = False  # NMS class-agnostic
@@ -24,7 +23,7 @@ while True:
 
     print(f"time elapsed: roughly {round((tot / 60), 1)} minutes")
     
-    randroll = randint(34, 50)
+    randroll = randint(30, 60)
     start_timecount = time.time()
 
     im = ImageGrab.grab()
@@ -35,7 +34,7 @@ while True:
         for i in range(len(resultsdf.name)):
             if resultsdf.name[i] == "invfull":
                 if resultsdf.confidence[i] >= 0.7:
-                    print(f"inventory full --> confidence: {resultsdf.confidence[i]}, dropping logs")
+                    print(f"inventory full --> confidence: {round(resultsdf.confidence[i], 2)}, dropping logs")
                     misc.drop_logs()
                     misc.customsleep(2)
     except:
@@ -44,41 +43,45 @@ while True:
 
 
     try: 
-        mid_x = round((resultsdf.xmin[0] + resultsdf.xmax[0]) / 4)
-        mid_y = round((resultsdf.ymin[0] + resultsdf.ymax[0]) / 4)
+        mid_x = round((resultsdf.xmin[0] + resultsdf.xmax[0]) / 4) # divided by 2 to get the centers of the boxes
+        mid_y = round((resultsdf.ymin[0] + resultsdf.ymax[0]) / 4) # divided by 2 again due to the screenshots being 2880x1800, the actual res is 1440x900
         rand = randint(-35, 35)
         rand_ = randint(-35, 35)
         coords_rand = (mid_x + rand, mid_y + rand_)
-        print(f"moving to {coords_rand}, confidence --> {resultsdf.confidence[0]}")
+        print(f"moving to & clicking {coords_rand}, confidence --> {round(resultsdf.confidence[0], 2)}")
         pya.moveTo(coords_rand)
         pya.click()
         tot_2 = 0
-        sleep(randint(9, 12))
+        det_sleep = uniform(9, 12)
+        print(f"waiting before detecting further --> sleeping for {round(det_sleep, 2)} seconds")
+        sleep(det_sleep)
         while True:
             im = ImageGrab.grab()
             results = model(im)
             resultsdf = results.pandas().xyxy[0]
             act_start = len(resultsdf.name)
-            print(act_start)
+            print(f"initial number of detections: {act_start}")
             while True:
                 timer_start = time.time()
                 im = ImageGrab.grab()
                 results = model(im)
                 resultsdf = results.pandas().xyxy[0]
                 act_check = len(resultsdf.name)
-                print(act_check)
+                print(f"current number of detections: {act_check}")
                 if tot_2 > randroll:
-                    print(f"feeling stagnant (no action for {randroll} seconds --> breaking")
+                    print(f"feeling stagnant (no action for {randroll} seconds) --> continuing")
                     break
                 if act_check - act_start >= abs(1) or act_start - act_check >= abs(1):
-                    print(f"character considered not active: {act_start} =/= {act_check} - difference of 2")
-                    sleep(uniform(0.15, 3.24))
+                    print(f"character considered inactive due to a difference in detection: {act_start} =/= {act_check}")
+                    det_sleep = uniform(0.15, 6.24)
+                    print(f"waiting before detecting --> sleeping for {round(det_sleep, 2)} seconds")
+                    sleep(det_sleep)
                     break
                 try:
                     for i in range(len(resultsdf.name)):
                         if resultsdf.name[i] == "invfull":
                             if resultsdf.confidence[i] >= 0.7:
-                                print(f"inventory full --> confidence: {resultsdf.confidence[i]}, dropping logs")
+                                print(f"inventory full --> confidence: {round(resultsdf.confidence[i], 2)}, dropping logs")
                                 misc.drop_logs()
                                 misc.customsleep(2)
                                 break
@@ -91,7 +94,7 @@ while True:
                 timer_start = 0
             break
     except:
-        print(f"unable to click on a tree - continuing")
+        print(f"unable to click on a tree --> continuing")
         pass
 
     end_timecount = time.time()
@@ -99,7 +102,7 @@ while True:
     end_timecount = 0
     start_timecount = 0
 
-# another implementation for taking screenshots - messes with the colors on OSX
+# another implementation for taking screenshots
 
 """
 while True:
