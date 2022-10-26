@@ -6,7 +6,7 @@ from random import uniform, randint
 def customsleep(inp = int):
         try:
             if inp == 0:
-                rand = round(uniform(0.03, 0.25), 3)
+                rand = round(uniform(0.03, 0.145), 3)
                 print(f"mini sleep called - sleeping for {rand} seconds")
                 return sleep(rand)
             if inp == 1:
@@ -101,6 +101,73 @@ def drop_logs():
     drop()
     pya.moveTo((1023 + randint(-10, 10), 497 + randint(-10, 10)))
     drop()
+
+def drop_fish():
+    print("starting to drop fish - change x and y values if incorrect")
+    customsleep(4)
+
+    pya.moveTo((1240 + randint(-10, 10), 280 + randint(-10,10)))
+    pya.click()
+
+    pya.moveTo((898 + randint(-10, 10), 280 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 280 + randint(-10, 10)))
+    drop()
+    pya.moveTo((982 + randint(-10, 10), 280 + randint(-10, 10)))
+    drop()
+    pya.moveTo((1023 + randint(-10, 10), 280 + randint(-10, 10)))
+    drop()
+
+    pya.moveTo((898 + randint(-10, 10), 317 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 317 + randint(-10, 10)))
+    drop()
+    pya.moveTo((982 + randint(-10, 10), 317 + randint(-10, 10)))
+    drop()
+    pya.moveTo((1023 + randint(-10, 10), 317 + randint(-10, 10)))
+    drop()
+
+    pya.moveTo((898 + randint(-10, 10), 354 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 354 + randint(-10, 10)))
+    drop()
+    pya.moveTo((982 + randint(-10, 10), 354 + randint(-10, 10)))
+    drop()
+    pya.moveTo((1023 + randint(-10, 10), 354 + randint(-10, 10)))
+    drop()
+
+    pya.moveTo((898 + randint(-10, 10), 390 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 390 + randint(-10, 10)))
+    drop()
+    pya.moveTo((982 + randint(-10, 10), 390 + randint(-10, 10)))
+    drop()
+    pya.moveTo((1023 + randint(-10, 10), 390 + randint(-10, 10)))
+    drop()
+
+    pya.moveTo((898 + randint(-10, 10), 425 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 425 + randint(-10, 10)))
+    drop()
+    pya.moveTo((982 + randint(-10, 10), 425 + randint(-10, 10)))
+    drop()
+    pya.moveTo((1023 + randint(-10, 10), 425 + randint(-10, 10)))
+    drop()
+
+    pya.moveTo((898 + randint(-10, 10), 460 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 460 + randint(-10, 10)))
+    drop()
+    pya.moveTo((982 + randint(-10, 10), 460 + randint(-10, 10)))
+    drop()
+    pya.moveTo((1023 + randint(-10, 10), 460 + randint(-10, 10)))
+    drop()
+
+    pya.moveTo((898 + randint(-10, 10), 497 + randint(-10, 10)))
+    drop()
+    pya.moveTo((940 + randint(-10, 10), 497 + randint(-10, 10)))
+    drop()
+
 
 def drop():
     pya.keyDown("shift")
