@@ -1,8 +1,8 @@
 # OSRS-YOLOv5
 
-This is a hobby project that utilizes the YOLOv5 object detection model to automate various in-game activities in Old School Runescape (OSRS) by detecting and interacting with on-screen objects. The scripts automate activities such as woodcutting, fishing, and operating the blast furnace.
+This is a hobby project that utilizes the YOLOv5 object detection model to automate various in-game activities in Old School Runescape (OSRS) by detecting and interacting with on-screen objects. The scripts automate activities such as woodcutting, fishing, operating the blast furnace, and mining.
 
-**Note:** As of now, the code is not clean and may very well be incomplete.
+**Note: Most scripts are not complete - better models needed**
 
 ## Requirements
 * PyAutoGUI
@@ -14,6 +14,8 @@ This is a hobby project that utilizes the YOLOv5 object detection model to autom
 
 ![Willows](https://giphy.com/embed/qFIQbcrzfZuCfB8kGQ)
 
-## Disclaimer
+## Usage
 
-Use at your own risk, the owner of this repository is not responsible for any consequences resulting from its use.
+The only file you need to interact with is **run.py**. Specify the script you want to use and run the Python file.
+
+Note: you may need to specify inventory items' on-screen locations.
