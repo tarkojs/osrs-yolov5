@@ -3,7 +3,7 @@ from random import randint, uniform
 from time import sleep, time
 from PIL import ImageGrab
 
-# the Player class contains all player interactions except for sleeps & dropping at prespecified coords
+# the 'Player' class contains all player interactions
 
 class Player():
 
@@ -14,7 +14,7 @@ class Player():
         self.agnostic = False
         self.multi_label = False
         self.classes = None
-        self.max_det = 10 # max valid:: 3 iron ores; 1 inv_full
+        self.max_det = 10
         self.amp = False
         self.tot = 0
         

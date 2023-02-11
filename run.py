@@ -8,7 +8,7 @@ Run any script using this Python file
 Please specify the script you would like to use on the line below
 """
 
-script = 'willows' # specify the script you would like to use -> ('willows'/'barbarian_fishing'/'blast_furnace')
+script = 'willows' # specify the script you would like to use -> ('willows'/'barbarian_fishing'/'blast_furnace/mining')
 
 def setup_model(script: str):
     try:
@@ -24,6 +24,9 @@ def setup_model(script: str):
 # cmnd for detection testing:: python detect.py --/users/tarkojuss/miner-osrs/weights_best.pt --img 300 --conf 0.2 --source 0
 
 def script_willows():
+    """
+    Finished and functional
+    """
     char = Player( torch.hub.load('ultralytics/yolov5', 'custom', setup_model(script)))
     while True:
         randroll = randint(30, 60)
