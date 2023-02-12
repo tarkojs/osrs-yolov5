@@ -20,6 +20,9 @@ class Player():
         
 
     def get_live_image(self):
+        """
+        Returns the dataframe of all current detections
+        """
         live_img = ImageGrab.grab()
         results = self.model(live_img)
         results_df = results.pandas().xyxy[0]
@@ -27,7 +30,17 @@ class Player():
 
 
     def get_detected_names(self):
+        """
+        Returns the names of all current detections
+        """
         return self.get_live_image().name
+
+
+    def check_if_in_action(self):
+        """
+        Returns the number of objects currently detected
+        """
+        return len(self.get_detected_names())
 
 
     def mining_check_if_inv_full(self):
@@ -42,6 +55,7 @@ class Player():
                         print(f'dropping.. -> confidence: {round(image.confidence[index]), 2}')
                         self.drop_ores()
                         self.sleep_custom('between-action-short')
+                        break
         except Exception: print('inventory not considered full.')
 
 
@@ -60,31 +74,74 @@ class Player():
                         break
         except Exception: print('inventory not considered full.')
 
+    
+    def barb_check_for_next_action(self):
+        """
+        Currently checks by iterating through the results dataframe
+        """
+        try:
+            image = self.get_live_image()
+            for index, detection in enumerate(image.name):
+                if image.name[index] == 'invfull':
+                    if image.confidence[index] >= 0.3:
+                        print(f'dropping.. -> confidence: {round(image.confidence[index]), 2}')
+                        self.drop_all()
+                        self.sleep_custom('big-interval-short')
+                        break
+                if image.name[index] == 'is_fishing':
+                    while True:
+                        image = self.get_live_image()
+                        for index, detection in enumerate(image.name):
+                            if image.name[index] == 'is_fishing':  
+                                print(f'still fishing.. -> confidence: {round(image.confidence[index]), 2}')
+                                self.sleep_custom('barb-fishing')
+                                break
+        except Exception: print('error in checking for next action..')
+                    
 
-    def get_click_location(self):
+    def barb_check_if_click_available(self):
+        """
+        Checks again if the character is not in action
+        Returns True if click is available
+        """
+        fish_list = []
+        try:
+            image = self.get_live_image()
+            for index, detection in enumerate(image.name):
+                if image.name[index] == 'is_fishing':
+                    fish_list.append(image.name[index])
+            if 'is_fishing' not in fish_list: return True
+            elif 'is_fishing' in fish_list: return False
+        except Exception: print('error in checking for click availability')
+
+
+    def get_click_location(self, randomize_x, randomize_y):
+        """
+        Gets the location of the detection
+        Randomizes this location and returns the randomized coordinates
+        """
         try:
             image = self.get_live_image()
             mid_x = round((image.xmin[0] + image.xmax[0]) / 4) # divided by 2 to get the centers of the boxes
             mid_y = round((image.ymin[0] + image.ymax[0]) / 4) # divided by 2 again due to the screenshots being 2880x1800, the actual res is 1440x900
-            randomize = randint(-35, 35)
-            randomize_ = randint(-35, 35)
+            randomize = randint(-randomize_x, randomize_x)
+            randomize_ = randint(-randomize_y, randomize_y)
             coords_randomized = (mid_x + randomize, mid_y + randomize_)
             print(f'\n...\nfound coords -> {coords_randomized}\n1st randomization -> {randomize}\n2nd randomization -> {randomize_}\n...\n')
             return coords_randomized
         except Exception: print('no available coords found..')
 
 
-    def click_on_detected_loc(self):
+    def click_on_detected_loc(self, randomize_x, randomize_y):
+        """
+        Clicks on the randomized coordinates
+        """
         try:
-            pya.moveTo(self.get_click_location())
+            pya.moveTo(self.get_click_location(randomize_x, randomize_y))
             pya.click()
         except Exception:
             print('unable to click.. continuing..')
             pass
-
-
-    def check_if_in_action(self):
-        return len(self.get_detected_names())
 
 
     def sleep_custom(self, sleep_name_string):
@@ -110,6 +167,10 @@ class Player():
             if sleep_name_string == 'willows':
                 rand = round(uniform(7, 9), 2)
                 print(f'\n***\nwillows sleep called -> sleeping for {rand} seconds..\n***\n')
+                return sleep(rand)
+            if sleep_name_string == 'barb-fishing':
+                rand = round(uniform(1, 15), 2)
+                print(f'\n***\nbarb fishing sleep called -> sleeping for {rand} seconds..\n***\n')
                 return sleep(rand)
             if sleep_name_string == 'big-interval-short':
                 rand = round(uniform(0.2, 1.1), 2)
@@ -248,6 +309,9 @@ class Player():
 
 
     def time_setup(self, action: str):
+        """
+        Returns the current time
+        """
         if action == 'current':
             return time()
         

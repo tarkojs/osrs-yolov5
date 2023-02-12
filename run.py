@@ -5,7 +5,7 @@ import sys
 
 """
 Run any script using this Python file
-Please specify the script you would like to use on the line below
+Specify the script you would like to use on the line below
 """
 
 script = 'willows' # specify the script you would like to use -> ('willows'/'barbarian_fishing'/'blast_furnace/mining')
@@ -15,9 +15,10 @@ def setup_model(script: str):
         if script == 'willows': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_willows.pt'
         elif script == 'barbarian_fishing': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_barb_fish.pt'
         elif script == 'blast_furnace': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_blast_furnace.pt'
+        elif script == 'mining': model_setup = NotImplemented
         else: sys.exit('quitting due to an error in model setup..')
         return model_setup
-    except:
+    except Exception:
         print(f'"{script}" is not a valid name for a script.')
         sys.exit('quitting due to an error in model setup..')
 
@@ -25,7 +26,7 @@ def setup_model(script: str):
 
 def script_willows():
     """
-    Finished and functional
+    Functional -> code could be cleaned up by a lot
     """
     char = Player( torch.hub.load('ultralytics/yolov5', 'custom', setup_model(script)))
     while True:
@@ -33,7 +34,7 @@ def script_willows():
         c = 0
         start_timecount = char.time_setup('current')
         char.willows_check_if_inv_full()
-        char.click_on_detected_loc()
+        char.click_on_detected_loc(randomize_x = 35, randomize_y = 35)
         time_total = 0
         char.sleep_custom('willows')
         while True:
@@ -68,8 +69,18 @@ def script_willows():
 
 
 def script_barb_fishing():
+    """
+    Fully functional and complete
+    Would benefit from a better model
+    """
     char = Player( torch.hub.load('ultralytics/yolov5', 'custom', setup_model(script)))
-    pass
+    start_timecount = char.time_setup('current')
+    while True:
+        char.barb_check_for_next_action()
+        if char.barb_check_if_click_available():
+            char.click_on_detected_loc(randomize_x = 12, randomize_y = 12)
+        char.tot = (char.time_setup('current') - start_timecount)
+        print(f'time passed -> {char.tot}')
 
 
 def script_blast_furnace():
@@ -84,8 +95,7 @@ def script_mining():
     char = Player( torch.hub.load('ultralytics/yolov5', 'custom', setup_model(script)))
     while True:
         char.drop_ores()
-        char.sleep_custom('reiterating main loop..')
-        print('reiterating the process.. -> reiteration sleep')
+        char.sleep_custom('reiteration')
 
 
 def main(): 
@@ -93,6 +103,7 @@ def main():
     if script == 'willows': script_willows()
     elif script == 'barbarian_fishing': script_barb_fishing()
     elif script == 'blast_furnace': script_blast_furnace()
+    elif script == 'mining': script_mining()
     else: sys.exit('quitting due to an error in the main block..')
 
 
