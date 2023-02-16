@@ -15,7 +15,7 @@ def setup_model(script: str):
         if script == 'willows': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_willows.pt'
         elif script == 'barbarian_fishing': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_barb_fish.pt'
         elif script == 'blast_furnace': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_blast_furnace.pt'
-        elif script == 'mining': model_setup = NotImplemented
+        elif script == 'mining': model_setup = '/Users/tarkojuss/Desktop/vskoodkood/OSTreeDetection/model_weights/best_mining.pt'
         else: sys.exit('quitting due to an error in model setup..')
         return model_setup
     except Exception:
@@ -94,7 +94,12 @@ def script_mining():
     """
     char = Player( torch.hub.load('ultralytics/yolov5', 'custom', setup_model(script)))
     while True:
-        char.drop_ores()
+        char.click_on_detected_loc()
+        char.sleep_custom('between-action-short')
+        char.click_on_detected_loc()
+        char.sleep_custom('between-action-short')
+        char.click_on_detected_loc()
+        char.sleep_custom('between-action-short')
         char.sleep_custom('reiteration')
 
 
