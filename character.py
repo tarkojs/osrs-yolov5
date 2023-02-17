@@ -17,6 +17,7 @@ class Player():
         self.max_det = 10
         self.amp = False
         self.tot = 0
+        self.mid = [0, 0]
         
 
     def get_live_image(self):
@@ -124,6 +125,7 @@ class Player():
             image = self.get_live_image()
             mid_x = round((image.xmin[0] + image.xmax[0]) / 4) # divided by 2 to get the centers of the boxes
             mid_y = round((image.ymin[0] + image.ymax[0]) / 4) # divided by 2 again due to the screenshots being 2880x1800, the actual res is 1440x900
+            self.save_last_detection(mid_x, mid_y)
             randomize = randint(-randomize_x, randomize_x)
             randomize_ = randint(-randomize_y, randomize_y)
             coords_randomized = (mid_x + randomize, mid_y + randomize_)
@@ -142,6 +144,11 @@ class Player():
         except Exception:
             print('unable to click.. continuing..')
             pass
+
+
+    def save_last_detection(self, mid_x, mid_y):
+        self.mid = [mid_x, mid_y]
+        return self.mid
 
 
     def sleep_custom(self, sleep_name_string):
@@ -313,5 +320,4 @@ class Player():
         Returns the current time
         """
         if action == 'current':
-            return time()
-        
+            return time()       

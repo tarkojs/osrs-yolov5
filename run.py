@@ -8,7 +8,7 @@ Run any script using this Python file
 Specify the script you would like to use on the line below
 """
 
-script = 'willows' # specify the script you would like to use -> ('willows'/'barbarian_fishing'/'blast_furnace/mining')
+script = 'mining' # specify the script you would like to use -> ('willows'/'barbarian_fishing'/'blast_furnace/mining')
 
 def setup_model(script: str):
     try:
@@ -94,11 +94,15 @@ def script_mining():
     """
     char = Player( torch.hub.load('ultralytics/yolov5', 'custom', setup_model(script)))
     while True:
-        char.click_on_detected_loc()
+        char.click_on_detected_loc(35, 35)
+        char.get_click_location(0, 0)
+        prev = char.save_last_detection(char.mid)
         char.sleep_custom('between-action-short')
-        char.click_on_detected_loc()
+        char.get_click_location(0, 0)
+        if prev != char.save_last_detection(): char.click_on_detected_loc(35, 35)
+        prev = char.save_last_detection()
         char.sleep_custom('between-action-short')
-        char.click_on_detected_loc()
+        if prev != char.save_last_detection(): char.click_on_detected_loc(35, 35)
         char.sleep_custom('between-action-short')
         char.sleep_custom('reiteration')
 
